@@ -82,7 +82,8 @@
       <div><img src="./velo-red.svg" /></span>Мало</div>
     </div>
 </div>
-<div id='panelzoom' class='panelzoom'></div>
+
+<!--<div id='panelzoom' class='panelzoom'></div>-->
 
 <script>
 mapboxgl.accessToken = 'pk.eyJ1IjoidGF5YWNoaWxsIiwiYSI6ImNpbGtxeHdnNzAwNzRvMGtxcWV4bXlmenQifQ.ymQiP_8v2syh79ZH9HU4Eg';
@@ -93,7 +94,7 @@ var map = new mapboxgl.Map({
     zoom: 10.5,
     minZoom: 10 // starting zoom
 });
-
+/* zoom
 map.on('load', function () {
   var x = map.getZoom();
   document.getElementById('panelzoom').innerHTML = '<p>zoom '+(Number(x).toFixed(1)) + '</p>';
@@ -102,11 +103,12 @@ map.on('load', function () {
     document.getElementById('panelzoom').innerHTML = '<p>zoom '+(Number(x).toFixed(1)) + '</p>';
   });
 });
+*/
 
 var source = {"type": "FeatureCollection", "features": []};
 
 function showData() {
-  const parkingsUrl = '//velobike-labs.urbica.co/velobike-api/ajax/parkings/?_=1499789533139';
+  const parkingsUrl = 'https://velobike.ru/ajax/parkings/?_=1499789533139';
   fetch(parkingsUrl)
     .then(function(response) { return response.json(); })
     .then(function(data) {
