@@ -88,12 +88,12 @@
 -->
 
 <script>
-mapboxgl.accessToken = 'pk.eyJ1IjoidGF5YWNoaWxsIiwiYSI6ImNpbGtxeHdnNzAwNzRvMGtxcWV4bXlmenQifQ.ymQiP_8v2syh79ZH9HU4Eg';
+mapboxgl.accessToken = 'pk.eyJ1Ijoid2Fsa21hcCIsImEiOiJjaXI0d285eXIwMDR1aHRtOWQ3YWE3d2JtIn0.pqyo1f-gocUK9i819vmQBQ';
 var map = new mapboxgl.Map({
     container: 'map', // container id
-    style: 'mapbox://styles/tayachill/cjj79hg7o26t52sp1zjzden5w', //stylesheet location
+    style: 'mapbox://styles/walkmap/cjjfzo9b266fa2sp5t3397pzz', //stylesheet location
     center: [37.601167,55.725875], // starting position
-    zoom: 10.5,
+    zoom: 10.4,
     minZoom: 10 // starting zoom
 });
 /* zoom
@@ -213,13 +213,13 @@ function addLayers() {
     'type': "circle",
     'source': "samokat_station",
     'paint': {
-      "circle-color": "#24161A",
+      "circle-color": "#F9D101",
       "circle-radius":  [
         'interpolate', ['linear'], ['zoom'],
           10,4,
           22,10
         ],
-        'circle-stroke-color': '#00FFEF',
+        'circle-stroke-color': '#FFF',
         'circle-stroke-width': 1,
         'circle-stroke-opacity': 1
     }
@@ -229,13 +229,13 @@ function addLayers() {
     'type': "circle",
     'source': "samokat",
     'paint': {
-      "circle-color": "#EE0F4F",
+      "circle-color": "#824AF4",
       "circle-radius":  [
         'interpolate', ['linear'], ['zoom'],
           10,4,
           22,10
         ],
-        'circle-stroke-color': '#00FFEF',
+        'circle-stroke-color': '#FFF',
         'circle-stroke-width': 1,
         'circle-stroke-opacity': 1
     }
@@ -254,7 +254,7 @@ function addLayers() {
           10,4,
           22,10
         ],
-        'circle-stroke-color': '#00FFEF',
+        'circle-stroke-color': '#FFF',
         'circle-stroke-width': 1,
         'circle-stroke-opacity': 1
     }
@@ -268,11 +268,11 @@ map.addLayer({
     'circle-color': [
       'step',
       ["number", ["/", ['get', 'FreePlaces'], ['get', 'TotalPlaces']]],
-      "#ff165d",
+      "#FF6090",
       0.3,
-      "#1bb03d",
+      "#D2F20D",
       0.7,
-      "#268CEB"
+      "#2687F4"
     ],
     'circle-radius': [
         'interpolate', ['linear'], ['zoom'],
