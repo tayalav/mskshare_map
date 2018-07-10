@@ -68,12 +68,6 @@
 
 </style>
 <div id='map'></div>
-<div id='menu'>
-    <input id='Lightmap' type='radio' name='rtoggle' value='cjiyquoft3vtp2rpfsdn7q4a2'>
-    <label for='Light'>Lightmap</label>
-    <input id='Basemap' type='radio' name='rtoggle' value='cjj79hg7o26t52sp1zjzden5w' checked='checked'>
-    <label for='Basemap'>Basemap</label>
-</div>
 <div id='state-legend' class='legend'>
     <h4>Кол-во велосипедов на станции:</h4>
     <div class="labels">
@@ -83,7 +77,15 @@
     </div>
 </div>
 
-<!--<div id='panelzoom' class='panelzoom'></div>-->
+<!--
+<div id='menu'>
+    <input id='Lightmap' type='radio' name='rtoggle' value='cjiyquoft3vtp2rpfsdn7q4a2'>
+    <label for='Light'>Lightmap</label>
+    <input id='Basemap' type='radio' name='rtoggle' value='cjj79hg7o26t52sp1zjzden5w' checked='checked'>
+    <label for='Basemap'>Basemap</label>
+</div>
+<div id='panelzoom' class='panelzoom'></div>
+-->
 
 <script>
 mapboxgl.accessToken = 'pk.eyJ1IjoidGF5YWNoaWxsIiwiYSI6ImNpbGtxeHdnNzAwNzRvMGtxcWV4bXlmenQifQ.ymQiP_8v2syh79ZH9HU4Eg';
@@ -106,36 +108,76 @@ map.on('load', function () {
 */
 
 var source = {"type": "FeatureCollection", "features": []};
+var source_samokat = {"type": "FeatureCollection", "features": []};
+var source_samokat_station = {"type": "FeatureCollection", "features": []};
 
 function showData() {
   const parkingsUrl = 'https://velobike.ru/ajax/parkings/?_=1499789533139';
-  fetch(parkingsUrl)
-    .then(function(response) { return response.json(); })
-    .then(function(data) {
-      data.Items.forEach(item=>{
-        item['load'] = item.FreePlaces/item.TotalPlaces;
-        source.features.push({
-          type: "Feature",
-          geometry: {
-            type: "Point",
-            coordinates: [item.Position.Lon,item.Position.Lat]
-          },
-          properties: item
-        })
-      });
-      addLayers();
-  });
+  const stationUrl = 'http://lite.youdrive.today/info/scooter/list';
+
+  Promise.all([
+    fetch(parkingsUrl)
+      .then(function(response) { return response.json(); })
+      .then(function(data) {
+        data.Items.forEach(item=>{
+          item['load'] = item.FreePlaces/item.TotalPlaces;
+          source.features.push({
+            type: "Feature",
+            geometry: {
+              type: "Point",
+              coordinates: [item.Position.Lon,item.Position.Lat]
+            },
+            properties: item
+          })
+        })}),
+      fetch(stationUrl)
+        .then(function(response) { return response.json(); })
+        .then(function(data) {
+          data.scooters.forEach( scooter => {
+            // station['load'] = station.id/station.number;
+            source_samokat.features.push({
+              type: "Feature",
+              geometry: {
+                type: "Point",
+                coordinates: [scooter.lon,scooter.lat]
+              },
+              properties: scooter
+            })
+          })}),
+        fetch(stationUrl)
+          .then(function(response) { return response.json(); })
+          .then(function(data) {
+            console.log(data.stations);
+            data.stations.forEach( station => {
+              // station['load'] = station.id/station.number;
+              source_samokat_station.features.push({
+                type: "Feature",
+                geometry: {
+                  type: "Point",
+                  coordinates: [station.lon,station.lat]
+                },
+                properties: station
+              })
+            })
+          })
+  ]).then(() => {
+    console.log('test');
+    addLayers();
+  })
 }
 
 let layersAlreadyAdded = false;
 map.on('styledata', function() {
   if (layersAlreadyAdded) return;
+  console.log('showData');
   showData();
   layersAlreadyAdded = true;
 });
 
+/*
 var layerList = document.getElementById('menu');
 var inputs = layerList.getElementsByTagName('input');
+
 
 function switchLayer(layer) {
   var layerId = layer.target.value;
@@ -146,26 +188,60 @@ function switchLayer(layer) {
 for (var i = 0; i < inputs.length; i++) {
     inputs[i].onclick = switchLayer;
 }
+*/
 
 function addLayers() {
   map.addSource('points', {
   'type': 'geojson',
   'data': source });
 
+  map.addSource('samokat', {
+  'type': 'geojson',
+  'data': source_samokat});
+
+  map.addSource('samokat_station', {
+  'type': 'geojson',
+  'data': source_samokat_station });
+
   map.addSource('deli_samokat', {
     type: 'geojson',
     data: './deli_samokat.geojson'
   });
 
-  map.addSource('yu_samokat', {
-    type: 'geojson',
-    data: './yu_samokat.geojson'
+  map.addLayer({
+    'id': "samokat_station",
+    'type': "circle",
+    'source': "samokat_station",
+    'paint': {
+      "circle-color": "#24161A",
+      "circle-radius":  [
+        'interpolate', ['linear'], ['zoom'],
+          10,4,
+          22,10
+        ],
+        'circle-stroke-color': '#00FFEF',
+        'circle-stroke-width': 1,
+        'circle-stroke-opacity': 1
+    }
+  });
+  map.addLayer({
+    'id': "samokat",
+    'type': "circle",
+    'source': "samokat",
+    'paint': {
+      "circle-color": "#EE0F4F",
+      "circle-radius":  [
+        'interpolate', ['linear'], ['zoom'],
+          10,4,
+          22,10
+        ],
+        'circle-stroke-color': '#00FFEF',
+        'circle-stroke-width': 1,
+        'circle-stroke-opacity': 1
+    }
   });
 
-  map.addSource('yu_station', {
-    type: 'geojson',
-    data: './yu_station.geojson'
-  });
+
 
   map.addLayer({
     'id': "deli_samokat",
@@ -178,41 +254,7 @@ function addLayers() {
           10,4,
           22,10
         ],
-        'circle-stroke-color': '#ffffFF',
-        'circle-stroke-width': 1,
-        'circle-stroke-opacity': 1
-    }
-  });
-
-  map.addLayer({
-    'id': "yu_samokat",
-    'type': "circle",
-    'source': "yu_samokat",
-    'paint': {
-      "circle-color": "#FB7C9B",
-      "circle-radius":  [
-        'interpolate', ['linear'], ['zoom'],
-          10,4,
-          22,10
-        ],
-        'circle-stroke-color': '#ffffFF',
-        'circle-stroke-width': 1,
-        'circle-stroke-opacity': 1
-    }
-  });
-
-  map.addLayer({
-    'id': "yu_station",
-    'type': "circle",
-    'source': "yu_station",
-    'paint': {
-      "circle-color": "#FFBF00",
-      "circle-radius":  [
-        'interpolate', ['linear'], ['zoom'],
-          10,4,
-          22,10
-        ],
-        'circle-stroke-color': '#ffffFF',
+        'circle-stroke-color': '#00FFEF',
         'circle-stroke-width': 1,
         'circle-stroke-opacity': 1
     }
@@ -241,29 +283,6 @@ map.addLayer({
   }
 });
 
-/*
-[
-  "step",
-  ["number", ["/", ['get', 'FreePlaces'], ['get', 'TotalPlaces']]],
-  "#3de0fc",
-  0.3,
-  "#a1f480",
-  0.7,
-  "#ff165d"
-],
-
-'circle-color': [
-  'step',
-  ["get", 'TotalPlaces'],
-  '#DE0021', 10,
-  '#F7D200', 15,
-  '#00B236', 20,
-  '#00B236', 40,
-  '#aaaaaa'
-  ],
-*/
-
-
   map.addLayer({
     'id': 'points_icon',
     'type': 'symbol',
@@ -288,6 +307,22 @@ map.addLayer({
     }
   });
 
+  map.addLayer({
+    'id': "deli_samokat",
+    'type': "circle",
+    'source': "deli_samokat",
+    'paint': {
+      "circle-color": "#00E0FF",
+      "circle-radius":  [
+        'interpolate', ['linear'], ['zoom'],
+          10,4,
+          22,10
+        ],
+        'circle-stroke-color': '#ffffFF',
+        'circle-stroke-width': 1,
+        'circle-stroke-opacity': 1
+    }
+  });
 
   map.addLayer({
     id: "points_txt",
