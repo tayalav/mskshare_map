@@ -31,7 +31,7 @@
     right: 10px;
     left: 50%;
     transform: translatex(-50%);
-    width: 210px;
+    width: 330px;
 }
 .legend > h4 {
   margin: 5px;
@@ -71,11 +71,13 @@
 <div id='map'></div>
 
 <div id='state-legend' class='legend'>
-    <h4>Кол-во велосипедов на станции:</h4>
+    <!--<h4>Кол-во велосипедов на станции:</h4>-->
     <div class="labels">
       <div><img src="./velo-blue.svg" />Много</div>
       <div><img src="./velo-green.svg" />Пока есть</div>
       <div><img src="./velo-red.svg" /></span>Мало</div>
+      <div><img src="./scooter-deli.svg" /></span>Дели</div>
+      <div><img src="./scooter-yu.svg" /></span>Юдрайв</div>
     </div>
 </div>
 
@@ -375,10 +377,10 @@ map.addLayer({
 
 
   map.addLayer({
-    id: "points_txt",
-    source: "points",
-    type: "symbol",
-    layout: {
+    'id': "points_txt",
+    'source': "points",
+    'type': "symbol",
+    'layout': {
       "text-field": "{FreePlaces}/{TotalPlaces}",
       "text-size": [
         'interpolate', ['linear'], ['zoom'],
