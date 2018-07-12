@@ -67,7 +67,9 @@
 
 
 </style>
+
 <div id='map'></div>
+
 <div id='state-legend' class='legend'>
     <h4>Кол-во велосипедов на станции:</h4>
     <div class="labels">
@@ -93,8 +95,8 @@ var map = new mapboxgl.Map({
     container: 'map', // container id
     style: 'mapbox://styles/walkmap/cjjfzo9b266fa2sp5t3397pzz', //stylesheet location
     center: [37.601167,55.725875], // starting position
-    zoom: 10.4,
-    minZoom: 10 // starting zoom
+    zoom: 10,
+    minZoom: 9 // starting zoom
 });
 /* zoom
 map.on('load', function () {
@@ -208,6 +210,7 @@ function addLayers() {
     data: './deli_samokat.geojson'
   });
 
+/*
   map.addLayer({
     'id': "samokat_station",
     'type': "circle",
@@ -220,23 +223,25 @@ function addLayers() {
           22,10
         ],
         'circle-stroke-color': '#FFF',
-        'circle-stroke-width': 1,
+        'circle-stroke-width': 0.5,
         'circle-stroke-opacity': 1
     }
   });
+  */
   map.addLayer({
     'id': "samokat",
     'type': "circle",
     'source': "samokat",
     'paint': {
-      "circle-color": "#824AF4",
-      "circle-radius":  [
-        'interpolate', ['linear'], ['zoom'],
+      "circle-color": "#8757FF",
+      'circle-radius': [
+          'interpolate', ['linear'], ['zoom'],
           10,4,
-          22,10
+          12,6,
+          12.2,0
         ],
         'circle-stroke-color': '#FFF',
-        'circle-stroke-width': 1,
+        'circle-stroke-width': 0.5,
         'circle-stroke-opacity': 1
     }
   });
@@ -249,13 +254,14 @@ function addLayers() {
     'source': "deli_samokat",
     'paint': {
       "circle-color": "#FF6300",
-      "circle-radius":  [
-        'interpolate', ['linear'], ['zoom'],
+      'circle-radius': [
+          'interpolate', ['linear'], ['zoom'],
           10,4,
-          22,10
+          12,6,
+          12.2,0
         ],
         'circle-stroke-color': '#FFF',
-        'circle-stroke-width': 1,
+        'circle-stroke-width': 0.5,
         'circle-stroke-opacity': 1
     }
   });
@@ -268,18 +274,78 @@ map.addLayer({
     'circle-color': [
       'step',
       ["number", ["/", ['get', 'FreePlaces'], ['get', 'TotalPlaces']]],
-      "#FF6090",
+      "#FF6B99",
       0.3,
       "#D2F20D",
       0.7,
-      "#2687F4"
+      "#3399FF"
     ],
     'circle-radius': [
         'interpolate', ['linear'], ['zoom'],
         10,4,
         12,6,
         12.2,0
-      ]
+      ],
+      'circle-stroke-color': '#FFF',
+      'circle-stroke-width': 0.5,
+      'circle-stroke-opacity': 1
+  }
+});
+
+map.addLayer({
+  'id': "deli_samokat_icon",
+  'type': "symbol",
+  'source': "deli_samokat",
+  'layout': {
+    'icon-image':  'scooter-deli',
+    "icon-size":  [
+      'interpolate', ['linear'], ['zoom'],
+        11.8,0,
+        12,0.7,
+        14,1,
+        16,1.2,
+        22,1.5
+      ],
+      'icon-allow-overlap': true
+  }
+});
+
+map.addLayer({
+  'id': "deli_samokat_txt",
+  'type': "symbol",
+  'source': "deli_samokat",
+  layout: {
+    "text-field": "{available_vehicles}/{total_vehicles}",
+    "text-size": [
+      'interpolate', ['linear'], ['zoom'],
+      12.9,0,
+      13,9,
+      16,10,
+      22,11
+    ],
+    "text-offset": [0,1.6],
+    "text-allow-overlap": true
+  },
+  paint: {
+    "text-color": "#555"
+  }
+});
+
+map.addLayer({
+  'id': "samokat_icon",
+  'type': "symbol",
+  'source': "samokat",
+  'layout': {
+    'icon-image':  'scooter-yu',
+    "icon-size":  [
+      'interpolate', ['linear'], ['zoom'],
+        11.8,0,
+        12,0.7,
+        14,1,
+        16,1.2,
+        22,1.5
+      ],
+      'icon-allow-overlap': true
   }
 });
 
@@ -307,22 +373,6 @@ map.addLayer({
     }
   });
 
-  map.addLayer({
-    'id': "deli_samokat",
-    'type': "circle",
-    'source': "deli_samokat",
-    'paint': {
-      "circle-color": "#00E0FF",
-      "circle-radius":  [
-        'interpolate', ['linear'], ['zoom'],
-          10,4,
-          22,10
-        ],
-        'circle-stroke-color': '#ffffFF',
-        'circle-stroke-width': 1,
-        'circle-stroke-opacity': 1
-    }
-  });
 
   map.addLayer({
     id: "points_txt",
@@ -344,6 +394,7 @@ map.addLayer({
       "text-color": "#555"
     }
   });
+
 };
 
 </script>
