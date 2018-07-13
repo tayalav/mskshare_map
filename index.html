@@ -333,7 +333,7 @@ map.addLayer({
   'paint': {
     'circle-color': [
       'step',
-      ["number", ["/", ['get', 'FreePlaces'], ['get', 'TotalPlaces']]],
+      ["number", ["/", ["number",["-", ['get', 'TotalPlaces'], ['get', 'FreePlaces']]], ['get', 'TotalPlaces']]],
       "#FF84AB",
       0.3,
       "#D2F20D",
@@ -402,8 +402,21 @@ map.addLayer({
   'type': "symbol",
   'layout': {
     'text-font':["Montserrat Bold","Arial Unicode MS Regular"],
-    "text-field": "{FreePlaces}/{TotalPlaces}",
-    "text-size": [
+    "text-field": [
+        "to-string",
+                [
+        "concat",
+        [
+          "to-string",
+          ["number", ["-", ['get', 'TotalPlaces'], ['get', 'FreePlaces']]]
+        ],
+        "/",
+        [
+          "to-string",
+          ["get", "TotalPlaces"]
+        ]
+      ]],
+            "text-size": [
       'interpolate', ['linear'], ['zoom'],
       12.9,0,
       13,9,
