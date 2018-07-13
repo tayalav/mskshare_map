@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="19px" height="19px" viewBox="0 0 19 19" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 51 (57462) - http://www.bohemiancoding.com/sketch -->
+    <title>scooter-yu</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="scooter-yu" transform="translate(-1.000000, -1.000000)">
+            <circle id="Oval-9-Copy-2" fill="#8757FF" fill-rule="nonzero" cx="10.5" cy="10.5" r="9.5"></circle>
+            <g id="Group" transform="translate(5.000000, 4.000000)" stroke="#FFFFFF">
+                <polyline id="Path-3" points="0 7.5 1.5 7.5 3.5 9.5 7.5 9.5 9.5 7.5 8.5 0.5 6 0.5"></polyline>
+                <circle id="Oval" cx="1" cy="10.5" r="1"></circle>
+                <circle id="Oval" cx="10" cy="10.5" r="1"></circle>
+                <path d="M4,7.5 L7,7.5" id="Path-2"></path>
+            </g>
+        </g>
+    </g>
+</svg>

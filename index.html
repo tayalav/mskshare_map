@@ -230,16 +230,44 @@ function addLayers() {
     }
   });
   */
+
   map.addLayer({
     'id': "samokat",
+    'type': "circle",
+    'source': "samokat",
+    'paint': {
+      'circle-color': [
+        'step',
+        ["get", 'battery_level'],
+        "#FF84AB",
+        30,
+        "#D2F20D",
+        60,
+        "#3399FF"
+      ],
+      'circle-radius': [
+          'interpolate', ['linear'], ['zoom'],
+          10,3.5,
+          12,8,
+          /*12.2,0*/
+          16,17
+        ],
+        'circle-stroke-color': '#FFF',
+        'circle-stroke-width': 0.5,
+        'circle-stroke-opacity': 0
+    }
+  });
+
+  map.addLayer({
+    'id': "samokat_purple",
     'type': "circle",
     'source': "samokat",
     'paint': {
       "circle-color": "#8757FF",
       'circle-radius': [
           'interpolate', ['linear'], ['zoom'],
-          10,4,
-          12,6,
+          10,1,
+          12,4,
           12.2,0
         ],
         'circle-stroke-color': '#FFF',
@@ -247,6 +275,7 @@ function addLayers() {
         'circle-stroke-opacity': 1
     }
   });
+
 
 
 
@@ -255,11 +284,38 @@ function addLayers() {
     'type': "circle",
     'source': "deli_samokat",
     'paint': {
+      'circle-color': [
+        'step',
+        ["number", ["/", ['get', 'available_vehicles'], ['get', 'total_vehicles']]],
+        "#FF84AB",
+        0.3,
+        "#D2F20D",
+        0.7,
+        "#3399FF"
+      ],
+      'circle-radius': [
+          'interpolate', ['linear'], ['zoom'],
+          10,3.5,
+          12,8,
+          /*12.2,0*/
+          16,17
+        ],
+        'circle-stroke-color': '#FFF',
+        'circle-stroke-width': 0.5,
+        'circle-stroke-opacity': 0
+    }
+  });
+
+  map.addLayer({
+    'id': "deli_samokat_orange",
+    'type': "circle",
+    'source': "deli_samokat",
+    'paint': {
       "circle-color": "#FF6300",
       'circle-radius': [
           'interpolate', ['linear'], ['zoom'],
-          10,4,
-          12,6,
+          10,1,
+          12,4,
           12.2,0
         ],
         'circle-stroke-color': '#FFF',
@@ -267,6 +323,8 @@ function addLayers() {
         'circle-stroke-opacity': 1
     }
   });
+
+
 
 map.addLayer({
   'id': 'points',
@@ -314,11 +372,58 @@ map.addLayer({
 });
 
 map.addLayer({
+  'id': 'points_icon',
+  'type': 'symbol',
+  'source': 'points',
+  'layout': {
+    'icon-image': 'velo-deep',
+      /*  'icon-image':  [
+        'step',
+        ["number", ["/", ['get', 'FreePlaces'], ['get', 'TotalPlaces']]],
+            'velo-red',
+            0.3, 'velo-green',
+            0.7, 'velo-blue'
+          ],*/
+    "icon-size":  [
+      'interpolate', ['linear'], ['zoom'],
+        11.8,0,
+        12,0.6,
+        14,1,
+        16,1.2,
+        22,1.5
+      ],
+      'icon-allow-overlap': true
+  }
+});
+
+map.addLayer({
+  'id': "points_txt",
+  'source': "points",
+  'type': "symbol",
+  'layout': {
+    'text-font':["Montserrat Bold","Arial Unicode MS Regular"],
+    "text-field": "{FreePlaces}/{TotalPlaces}",
+    "text-size": [
+      'interpolate', ['linear'], ['zoom'],
+      12.9,0,
+      13,9,
+      16,10,
+      22,11
+    ],
+    "text-offset": [0,2],
+    "text-allow-overlap": true
+  },
+  paint: {
+    "text-color": "#3060FF"
+  }
+});
+
+map.addLayer({
   'id': "deli_samokat_icon",
   'type': "symbol",
   'source': "deli_samokat",
   'layout': {
-    'icon-image':  'scooter-deli',
+    'icon-image':  'scooter-deli_out',
     "icon-size":  [
       'interpolate', ['linear'], ['zoom'],
         11.8,0,
@@ -336,6 +441,7 @@ map.addLayer({
   'type': "symbol",
   'source': "deli_samokat",
   layout: {
+    'text-font':["Montserrat Bold","Arial Unicode MS Regular"],
     "text-field": "{available_vehicles}/{total_vehicles}",
     "text-size": [
       'interpolate', ['linear'], ['zoom'],
@@ -344,11 +450,11 @@ map.addLayer({
       16,10,
       22,11
     ],
-    "text-offset": [0,1.6],
+    "text-offset": [0,2],
     "text-allow-overlap": true
   },
   paint: {
-    "text-color": "#555"
+    "text-color": "#FF6300"
   }
 });
 
@@ -357,7 +463,7 @@ map.addLayer({
   'type': "symbol",
   'source': "samokat",
   'layout': {
-    'icon-image':  'scooter-yu',
+    'icon-image':  'scooter-yu_out',
     "icon-size":  [
       'interpolate', ['linear'], ['zoom'],
         11.8,0,
@@ -370,51 +476,26 @@ map.addLayer({
   }
 });
 
-  map.addLayer({
-    'id': 'points_icon',
-    'type': 'symbol',
-    'source': 'points',
-    'layout': {
-      'icon-image': 'velo-deep',
-        /*  'icon-image':  [
-          'step',
-          ["number", ["/", ['get', 'FreePlaces'], ['get', 'TotalPlaces']]],
-              'velo-red',
-              0.3, 'velo-green',
-              0.7, 'velo-blue'
-            ],*/
-      "icon-size":  [
-        'interpolate', ['linear'], ['zoom'],
-          11.8,0,
-          12,0.6,
-          14,1,
-          16,1.2,
-          22,1.5
-        ],
-        'icon-allow-overlap': true
-    }
-  });
-
-
-  map.addLayer({
-    'id': "points_txt",
-    'source': "points",
-    'type': "symbol",
-    'layout': {
-      "text-field": "{FreePlaces}/{TotalPlaces}",
-      "text-size": [
-        'interpolate', ['linear'], ['zoom'],
-        12.9,0,
-        13,9,
-        16,10,
-        22,11
-      ],
-      "text-offset": [0,1.6],
-      "text-allow-overlap": true
-    },
-    paint: {
-      "text-color": "#555"
-    }
+map.addLayer({
+  'id': "samokat_txt",
+  'type': "symbol",
+  'source': "samokat",
+  layout: {
+    'text-font':["Montserrat Bold","Arial Unicode MS Regular"],
+    "text-field": "{battery_level}%",
+    "text-size": [
+      'interpolate', ['linear'], ['zoom'],
+      12.9,0,
+      13,9,
+      16,10,
+      22,11
+    ],
+    "text-offset": [0,2],
+    "text-allow-overlap": true
+  },
+  paint: {
+    "text-color": "#8757FF"
+  }
   });
 
 };
